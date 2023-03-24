@@ -33,8 +33,9 @@ get_lengthConvert <- function(hydraData){
     group_by(survey, year, species, name)%>%
     mutate(total=sum(n), paa=n/total)%>%
     select(survey, year,species,name,age,paa)%>%
-    spread(age,paa)#%>% 
-    #as.tibble()
+    spread(age,paa)%>% 
+    rename(one="1", two="2", three="3", four="4", five="5", six="6", seven="7", eight="8", nine="9", ten="10")
+  #as.tibble()
     #as.list()
  matrix(paaSurv$paa, ncol=42) # probably need the same number of ages for each year/ species
       
@@ -45,8 +46,8 @@ get_lengthConvert <- function(hydraData){
     group_by(fishery, year, species, name)%>%
     mutate(total=sum(n), paa=n/total)%>%
     select(fishery, year,species,name,age,paa)%>%
-    spread(age,paa)
-    #spread(age,paa) %>%
+    spread(age,paa)%>%
+    rename(one="1", two="2", three="3", four="4", five="5", six="6", seven="7", eight="8", nine="9", ten="10")
     #group_by(name)%>%
     #group_split()
   
@@ -54,9 +55,9 @@ get_lengthConvert <- function(hydraData){
 paaSurv[is.na(paaSurv)]<-0
 paaCN[is.na(paaCN)]<- 0
 
-cod <- list(paaIN=filter(paaSurv, survey==1),
-            paaCN=paaCN,
-            sumIN=filter(hydraDataList_msk$observedBiomass, species==1 & survey==1),
-            sumCW=filter(hydraDataList_msk$observedCatch, species==1))
-
+cod <- list(paaIN=filter(paaSurv, survey==1 & year<38),
+            paaCN=filter(paaCN, year<38),
+            sumIN=filter(hydraDataList_msk$observedBiomass, species==1 & survey==1 & year<38),
+            sumCW=filter(hydraDataList_msk$observedCatch, species==1 & year<38))
+saveRDS(cod,file= "hydraData_cod.rdat")
 }
